@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mongodb:
+      container_name: q-mongo-sn-rs
+      restart: always
+      image: mongo:latest
+      expose:
+        - 27017
+      ports:
+        - "27017:27017"
+      volumes:
+        - type: volume
+          source: db
+          target: /data/db
+        - type: volume
+          source: config-db
+          target: /data/configdb
+        - ./scripts/rs-initiate.js:/docker-entrypoint-initdb.d/rs-initiate.js
+      command: ["--replSet", "q-db-sn-rs", "--bind_ip_all"]
+
+volumes:
+  db:
+  config-db:
